@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:travel_buddy_app/firebase_options.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:travel_buddy_app/register_email.dart';
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
@@ -12,8 +13,7 @@ void main() async{
 }
 
 class MyApp extends StatelessWidget {
-   MyApp({super.key});
-final FirebaseAuth _auth = FirebaseAuth.instance;
+  
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -37,14 +37,15 @@ final FirebaseAuth _auth = FirebaseAuth.instance;
         // tested with just a hot reload.
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
-      home: const MyHomePage(title: 'Travel Buddy App'),
+      home: MyHomePage(title: 'Travel Buddy App'),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
+   MyHomePage({Key?key, required this.title}): super(key: key);
+ //MyApp({super.key});
+// final FirebaseAuth _auth = FirebaseAuth.instance;
   // This widget is the home page of your application. It is stateful, meaning
   // that it has a State object (defined below) that contains fields that affect
   // how it looks.
@@ -61,7 +62,8 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
- 
+ final FirebaseAuth _auth = FirebaseAuth.instance;
+
 
   @override
   Widget build(BuildContext context) {
@@ -100,7 +102,7 @@ class _MyHomePageState extends State<MyHomePage> {
           // wireframe for each widget.
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            
+            RegisterEmail(auth: _auth)
             
           ],
         ),
