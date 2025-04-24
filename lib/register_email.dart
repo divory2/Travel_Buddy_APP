@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:travel_buddy_app/mainMenu.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class RegisterEmail extends StatefulWidget{
   RegisterEmail({Key? key, required this.auth}) : super(key: key);
@@ -21,7 +22,12 @@ class _RegisterEmailState extends State<RegisterEmail>{
 
    void _signIn() async{
     try{
-      final UserCredential = await widget.auth.signInWithEmailAndPassword(email: _emailController.text, password: _passwordController.text);
+
+      print("*******before register");
+
+      final UserCredential = await widget.auth.createUserWithEmailAndPassword(email: _emailController.text, password: _passwordController.text);
+      
+      print("****after register");
       setState(() {
         _sucess =true;
         _userEmail = UserCredential.user?.email ?? '';
@@ -29,8 +35,9 @@ class _RegisterEmailState extends State<RegisterEmail>{
 
         
       });
-      final FirebaseAuth auth = widget.auth;
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> MainMenu(auth: auth)));
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> MainMenu(user: UserCredential)));
+      
+      
     }
     catch(e){
       setState(() {
@@ -80,11 +87,23 @@ class _RegisterEmailState extends State<RegisterEmail>{
             child: ElevatedButton(onPressed: (){
               if(_formKey.currentState!.validate()){
                   // add method to handle sign in 
-                  _signIn;
+                  _signIn();
               }
 
             }, child: Text("Sign in")),
+          ),
+          Container( 
+            padding: const EdgeInsets.symmetric(vertical: 10.0),
+            alignment: Alignment.center,
+            child: ElevatedButton(onPressed: (){
+              if(_formKey.currentState!.validate()){
+                  // add method to handle sign in 
+                  //_signIn;
+              }
+
+            }, child: Text("Register")),
           )
+
           
 
         ],

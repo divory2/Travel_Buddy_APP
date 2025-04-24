@@ -1,10 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
 
 class MainMenu extends StatefulWidget{
  
-  MainMenu({Key?key, required this.auth}):super(key:key);
-  final FirebaseAuth auth;
+  MainMenu({Key?key, required this.user}):super(key:key);
+  final UserCredential user;
    @override
    _MainMenuState createState() => _MainMenuState();
 

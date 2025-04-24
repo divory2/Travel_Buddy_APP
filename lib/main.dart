@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:travel_buddy_app/firebase_options.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:travel_buddy_app/register_email.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
