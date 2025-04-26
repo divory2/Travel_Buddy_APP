@@ -15,6 +15,20 @@ class _RegisterEmailState extends State<RegisterEmail>{
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
    final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+ final TextEditingController _firstNameController = TextEditingController();
+  final TextEditingController _lastNameController = TextEditingController();
+  final TextEditingController _userNameController = TextEditingController();
+
+  @override
+  void dispose(){
+    _emailController.dispose();
+    _passwordController.dispose();
+    _firstNameController.dispose();
+    _lastNameController.dispose();
+    _userNameController.dispose();
+    super.dispose();
+  }
+  FirebaseFirestore _dataBase = FirebaseFirestore.instance; //db instance 
   bool _sucess =false;
   bool _initialState = true;
   
@@ -28,6 +42,7 @@ class _RegisterEmailState extends State<RegisterEmail>{
       final UserCredential = await widget.auth.createUserWithEmailAndPassword(email: _emailController.text, password: _passwordController.text);
       
       print("****after register");
+    
       setState(() {
         _sucess =true;
         _userEmail = UserCredential.user?.email ?? '';
@@ -35,6 +50,17 @@ class _RegisterEmailState extends State<RegisterEmail>{
 
         
       });
+      print("**********before insert into db");
+         _dataBase.collection('Profile').doc(UserCredential.user?.uid).set({
+        'email': _userEmail,
+        'userName': _userNameController.text,
+        'firstName': _firstNameController.text,
+        'lastName': _lastNameController.text,
+        'CreatedAt': Timestamp.now(),
+        
+        
+      }).onError((e, _) => print("Error writing document: $e"));
+      print("**********After insert into db");
       Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> MainMenu(user: UserCredential)));
       
       
@@ -64,6 +90,36 @@ Widget build(BuildContext context) {
       key: _formKey,
       child: Column(
         children: [
+          TextFormField(
+              controller: _firstNameController,
+              decoration: InputDecoration(labelText: 'First Name'),
+              validator: (value) {
+                if(value?.isEmpty?? true){
+                  return 'Please enter a First Name';
+                }
+                return null;
+              },
+          ),
+           TextFormField(
+              controller: _lastNameController,
+              decoration: InputDecoration(labelText: 'Last Name'),
+              validator: (value) {
+                if(value?.isEmpty?? true){
+                  return 'Please enter a Last Name';
+                }
+                return null;
+              },
+          ),
+          TextFormField(
+              controller: _userNameController,
+              decoration: InputDecoration(labelText: 'UserName'),
+              validator: (value) {
+                if(value?.isEmpty?? true){
+                  return 'Please enter a UserName';
+                }
+                return null;
+              },
+          ),
           TextFormField(
               controller: _emailController,
               decoration: InputDecoration(labelText: 'Email'),
