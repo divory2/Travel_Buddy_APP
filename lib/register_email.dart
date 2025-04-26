@@ -53,10 +53,14 @@ class _RegisterEmailState extends State<RegisterEmail>{
 
 
   }
-  @override
-  Widget build(BuildContext context) {
-    // TODO: implement build
-    return Form(
+ @override
+Widget build(BuildContext context) {
+  return Scaffold( 
+    appBar: AppBar(
+      title: Text("Register Page"),
+    ),
+    body: SingleChildScrollView(
+      child: Form(
       key: _formKey,
       child: Column(
         children: [
@@ -92,17 +96,7 @@ class _RegisterEmailState extends State<RegisterEmail>{
 
             }, child: Text("Sign in")),
           ),
-          Container( 
-            padding: const EdgeInsets.symmetric(vertical: 10.0),
-            alignment: Alignment.center,
-            child: ElevatedButton(onPressed: (){
-              if(_formKey.currentState!.validate()){
-                  // add method to handle sign in 
-                  //_signIn;
-              }
-
-            }, child: Text("Register")),
-          )
+         
 
           
 
@@ -110,7 +104,10 @@ class _RegisterEmailState extends State<RegisterEmail>{
 
       )
     
+    )
+  )
     );
-  }
+}
+
 
 }

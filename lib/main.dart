@@ -4,6 +4,7 @@ import 'package:travel_buddy_app/firebase_options.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:travel_buddy_app/register_email.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:travel_buddy_app/signIn.dart';
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
@@ -103,7 +104,7 @@ class _MyHomePageState extends State<MyHomePage> {
           // wireframe for each widget.
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            RegisterEmail(auth: _auth)
+            SignIn(auth: _auth)
             
           ],
         ),

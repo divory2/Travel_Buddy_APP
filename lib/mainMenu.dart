@@ -19,7 +19,7 @@ class _MainMenuState extends State<MainMenu>{
         title: Text("Travel Buddy APP"),
         actions: <Widget>[
           ElevatedButton(onPressed: (){
-
+              
           }, child: Text("Sign out"))
         ],
       ),
