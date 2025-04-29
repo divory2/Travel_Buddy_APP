@@ -2,11 +2,15 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:travel_buddy_app/matching.dart';
+import 'package:travel_buddy_app/profile.dart';
+import 'package:travel_buddy_app/signIn.dart';
 
 class MainMenu extends StatefulWidget{
  
-  MainMenu({Key?key, required this.user}):super(key:key);
+  MainMenu({Key?key, required this.user,}):super(key:key);
   final UserCredential user;
+  
    @override
    _MainMenuState createState() => _MainMenuState();
 
@@ -28,6 +32,7 @@ class _MainMenuState extends State<MainMenu>{
     docRef.get().then(
       (DocumentSnapshot doc){
         data = doc.data() as Map<String,dynamic>;
+        print("*********data user name: ***** ${data['userName']}");
       }
     );
 
@@ -48,11 +53,17 @@ class _MainMenuState extends State<MainMenu>{
     // TODO: implement build
     return Scaffold(
       appBar: AppBar(
-        leading: Text("Profile: ${data["userName"]}"),
+        leading: Text("Profile: ${data['userName']}"),
         title: Text("Travel Buddy APP"),
         actions: <Widget>[
-          ElevatedButton(onPressed: (){
-              
+          ElevatedButton(onPressed: ()async{
+               await FirebaseAuth.instance.signOut();
+                Navigator.of(context).pushAndRemoveUntil(
+      MaterialPageRoute(
+        builder: (context) => SignIn(auth: FirebaseAuth.instance),
+      ),
+      (route) => false,
+    );
           }, child: Text("Sign out"))
         ],
       ),
@@ -63,9 +74,22 @@ class _MainMenuState extends State<MainMenu>{
             ElevatedButton(onPressed: (){
 
             }, child: Text("Map")),
+
+            ElevatedButton(onPressed: (){
+              Navigator.push(context, MaterialPageRoute(builder: (context)=> Profile(user: widget.user)));
+
+            }, child: Text("Profile")),
+            ElevatedButton(onPressed: (){
+              
+
+            }, child: Text("Chat")),
+            ElevatedButton(onPressed: (){
+              FirebaseAuth auth = FirebaseAuth.instance;
+              Navigator.push(context, MaterialPageRoute(builder: (context)=> Matching(auth: auth)));
+            }, child: Text("Buddy Matching")),
             ElevatedButton(onPressed: (){
 
-            }, child: Text("Map")),
+            }, child: Text("Planner")),
           ],
           
         ),
