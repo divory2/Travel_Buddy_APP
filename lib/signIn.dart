@@ -18,11 +18,17 @@ class _SignInState extends State<SignIn> {
 
   bool _success = false;
   String _userEmail = '';
-  void _register(){
+
+  // Function to navigate to Register Email screen
+  void _register() {
     final FirebaseAuth auth = widget.auth;
-    Navigator.push(context, MaterialPageRoute(builder: (context)=>RegisterEmail(auth: auth)));
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => RegisterEmail(auth: auth)),
+    );
   }
 
+  // Function to handle the sign-in logic
   void _signIn() async {
     try {
       final userCredential = await widget.auth.signInWithEmailAndPassword(
@@ -56,66 +62,66 @@ class _SignInState extends State<SignIn> {
 
   @override
   Widget build(BuildContext context) {
-     return Form(
-      key: _formKey,
-      child: Column(
-        children: [
-          Container(
-            padding: EdgeInsets.all(14),
-            alignment: Alignment.topCenter,
-            child: Text("Sign in Page"),
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Sign In"),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Form(
+          key: _formKey,
+          child: Column(
+            children: [
+              Container(
+                padding: EdgeInsets.all(14),
+                alignment: Alignment.topCenter,
+                child: Text("Sign in Page"),
+              ),
+              TextFormField(
+                controller: _emailController,
+                decoration: InputDecoration(labelText: 'Email'),
+                validator: (value) {
+                  if (value?.isEmpty ?? true) {
+                    return 'Please enter an email';
+                  }
+                  return null;
+                },
+              ),
+              TextFormField(
+                controller: _passwordController,
+                decoration: InputDecoration(labelText: 'Password'),
+                obscureText: true,
+                validator: (value) {
+                  if (value?.isEmpty ?? true) {
+                    return 'Please enter a password';
+                  }
+                  return null;
+                },
+              ),
+              Container(
+                padding: const EdgeInsets.symmetric(vertical: 10.0),
+                alignment: Alignment.center,
+                child: ElevatedButton(
+                  onPressed: () {
+                    if (_formKey.currentState!.validate()) {
+                      _signIn();
+                    }
+                  },
+                  child: Text("Sign in"),
+                ),
+              ),
+              Container(
+                padding: const EdgeInsets.symmetric(vertical: 10.0),
+                alignment: Alignment.center,
+                child: ElevatedButton(
+                  onPressed: _register,
+                  child: Text("Register"),
+                ),
+              ),
+            ],
           ),
-          TextFormField(
-              controller: _emailController,
-              decoration: InputDecoration(labelText: 'Email'),
-              validator: (value) {
-                if(value?.isEmpty?? true){
-                  return 'Please enter a email';
-                }
-                return null;
-              },
-          ),
-          TextFormField(
-              controller: _passwordController,
-              decoration: InputDecoration(labelText: 'Password'),
-              validator: (value) {
-                if(value?.isEmpty?? true){
-                  return 'Please enter a password';
-                }
-                return null;
-              },
-
-          ),
-          Container( 
-            padding: const EdgeInsets.symmetric(vertical: 10.0),
-            alignment: Alignment.center,
-            child: ElevatedButton(onPressed: (){
-              if(_formKey.currentState!.validate()){
-                  // add method to handle sign in 
-                  _signIn();
-              }
-
-            }, child: Text("Sign in")),
-          ),
-          Container( 
-            
-            padding: const EdgeInsets.symmetric(vertical: 10.0),
-            alignment: Alignment.center,
-            child: ElevatedButton(onPressed: (){
-                  _register();
-                  // add method to handle sign in 
-                  //_signIn;
-                  //RegisterEmail(auth: widget.auth);
-
-            }, child: Text("Register")),
-          )
-
-          
-
-        ],
-
-      )
-    
+        ),
+      ),
     );
   }
 }

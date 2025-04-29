@@ -61,7 +61,7 @@ class _RegisterEmailState extends State<RegisterEmail>{
         
       }).onError((e, _) => print("Error writing document: $e"));
       print("**********After insert into db");
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> MainMenu(user: UserCredential)));
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> MainMenu(user: UserCredential )));
       
       
     }
