@@ -6,11 +6,15 @@ plugins {
     id("kotlin-android")
     // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
     id("dev.flutter.flutter-gradle-plugin")
+
+    
 }
 
+
+        
 android {
     namespace = "com.example.travel_buddy_app"
-    compileSdk = flutter.compileSdkVersion
+    compileSdk = 34
     ndkVersion = flutter.ndkVersion
 
     compileOptions {
@@ -31,7 +35,13 @@ android {
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
+val placesApiKey: String = project.findProperty("PLACES_API_KEY") as String? ?: ""
+        manifestPlaceholders["PLACES_API_KEY"] = placesApiKey
     }
+    buildFeatures {
+    buildConfig = true
+    // ...
+  }
 
     buildTypes {
         release {
