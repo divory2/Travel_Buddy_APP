@@ -29,9 +29,19 @@ class _ProfileState extends State<Profile> {
 
   Future<void> insertBio() async {
     print("Inserting bio into DB ******");
-    database.collection("Profile").doc(widget.user.user?.uid).update({
-      'bio': _profileController.text
-    }).onError((e, _) => print("Error writing document: $e"));
+    try {
+      await database.collection("Profile").doc(widget.user.user?.uid).update({
+        'bio': _profileController.text,
+      });
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Bio updated successfully")),
+      );
+    } catch (e) {
+      print("Error writing document: $e");
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Failed to update bio")),
+      );
+    }
   }
 
   void _showInterestSelectionDialog() {
@@ -66,7 +76,7 @@ class _ProfileState extends State<Profile> {
                 _saveSelectedInterests();
               },
               child: Text('Save'),
-            )
+            ),
           ],
         );
       },
@@ -111,7 +121,7 @@ class _ProfileState extends State<Profile> {
             child: Text("Update"),
             onPressed: () async {
               try {
-                await widget.user.user?.updatePassword(_newPasswordController.text).onError((e, _) => print("Error writing document: $e"));
+                await widget.user.user?.updatePassword(_newPasswordController.text);
                 Navigator.pop(context);
                 ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Password updated successfully")));
               } catch (e) {
@@ -126,14 +136,14 @@ class _ProfileState extends State<Profile> {
   }
 
   Future<void> _showChangeUserNameDialog(BuildContext context) async {
-    final TextEditingController _newPasswordController = TextEditingController();
+    final TextEditingController _newUserNameController = TextEditingController();
 
     showDialog(
       context: context,
       builder: (_) => AlertDialog(
         title: Text("Change UserName"),
         content: TextField(
-          controller: _newPasswordController,
+          controller: _newUserNameController,
           decoration: InputDecoration(labelText: "Change UserName"),
         ),
         actions: [
@@ -146,9 +156,8 @@ class _ProfileState extends State<Profile> {
             onPressed: () async {
               try {
                 await database.collection("Profile").doc(widget.user.user?.uid).update({
-                  'userName': _newPasswordController.text
-                }).onError((e, _) => print("Error writing document: $e"));
-
+                  'userName': _newUserNameController.text
+                });
                 Navigator.pop(context);
                 ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("UserName was updated")));
               } catch (e) {
@@ -187,36 +196,41 @@ class _ProfileState extends State<Profile> {
           }
         },
       ),
-      body: Column(
-        children: [
-          SizedBox(
-            width: 250,
-            child: TextField(
-              controller: _profileController,
-              decoration: InputDecoration(border: const OutlineInputBorder(), label: const Text("Enter your bio")),
-              maxLines: 3,
-              onChanged: (value) {
-                insertBio();
-              },
-            ),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              _showChangePasswordDialog(context);
-            },
-            child: Text("Change Password"),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              _showChangeUserNameDialog(context);
-            },
-            child: Text("Change UserName"),
-          ),
-          ElevatedButton(
-            onPressed: _showInterestSelectionDialog,
-            child: Text("Select Interests"),
-          ),
-        ],
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          return Column(
+            children: [
+              SizedBox(
+                width: 250,
+                child: TextField(
+                  controller: _profileController,
+                  decoration: InputDecoration(border: const OutlineInputBorder(), label: const Text("Enter your bio")),
+                  maxLines: 3,
+                ),
+              ),
+              ElevatedButton(
+                onPressed: insertBio,
+                child: Text("Save Bio"),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  _showChangePasswordDialog(context);
+                },
+                child: Text("Change Password"),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  _showChangeUserNameDialog(context);
+                },
+                child: Text("Change UserName"),
+              ),
+              ElevatedButton(
+                onPressed: _showInterestSelectionDialog,
+                child: Text("Select Interests"),
+              ),
+            ],
+          );
+        },
       ),
     );
   }
