@@ -2,13 +2,16 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:travel_buddy_app/chat_screen.dart';
+import 'package:travel_buddy_app/itenerary_planner.dart';
+import 'package:travel_buddy_app/map.dart';
 import 'package:travel_buddy_app/matching.dart';
 import 'package:travel_buddy_app/profile.dart';
 import 'package:travel_buddy_app/signIn.dart';
 
 class MainMenu extends StatefulWidget{
  
-  MainMenu({Key?key, required this.user,}):super(key:key);
+  MainMenu({Key?key, required this.user}):super(key:key);
   final UserCredential user;
   
    @override
@@ -71,15 +74,16 @@ class _MainMenuState extends State<MainMenu>{
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             ElevatedButton(onPressed: (){
-
+                  Navigator.push(context, MaterialPageRoute(builder: (context)=> Maps()));
             }, child: Text("Map")),
 
             ElevatedButton(onPressed: (){
               Navigator.push(context, MaterialPageRoute(builder: (context)=> Profile(user: widget.user)));
 
             }, child: Text("Profile")),
+
             ElevatedButton(onPressed: (){
-              
+              Navigator.push(context, MaterialPageRoute(builder: (context)=> ChatScreen(user: widget.user,)));
 
             }, child: Text("Chat")),
             ElevatedButton(onPressed: (){
@@ -87,7 +91,7 @@ class _MainMenuState extends State<MainMenu>{
               Navigator.push(context, MaterialPageRoute(builder: (context)=> Matching(auth: auth)));
             }, child: Text("Buddy Matching")),
             ElevatedButton(onPressed: (){
-
+                Navigator.push(context, MaterialPageRoute(builder: (context)=> Planner()));
             }, child: Text("Planner")),
           ],
           
