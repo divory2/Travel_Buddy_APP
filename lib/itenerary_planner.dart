@@ -27,6 +27,7 @@ List<dynamic> legs = [];
 List<dynamic> steps =[];
 List <String> insturctionsList = [];
 List<String> destinationList=[];
+List<String> destinationListId=[];
 
 
 @override
@@ -47,9 +48,15 @@ void initState() {
   }
   getSuggestion(_controller.text);
 }
-void _addToDestinationList(String des){
+void _addToDestinationList(String des, String desId){
+  
+  setState(() {
+    
+  
   destinationList.add(des);
+  destinationListId.add(desId);
   print("****destination List***** $destinationList");
+  });
 }
 
 
@@ -115,13 +122,17 @@ Future<void> _viewDestinations(BuildContext context) async {
                         onPressed: () {
                           setState(() {
                             destinationList.removeAt(index);
+                            destinationListId.removeAt(index);
                           });
                         },
                       ),
                       title: Text(destination),
                       trailing: IconButton(
                         icon: Icon(Icons.directions),
-                        onPressed: () => _getDirectionsTo(destination, context),
+                        onPressed: () async{
+                           Navigator.pop(context);
+                           await _getDirectionsTo(destinationListId[index],this.context);
+                           },
                       ),
                     );
                   },
@@ -206,7 +217,8 @@ void _ShowDirections(BuildContext context){
                 return GestureDetector(
                   
                   onTap: () async {
-                    _addToDestinationList(_placeList[index]["description"]);
+                    _addToDestinationList(_placeList[index]["description"], _placeList[index]["place_id"]);
+
                   },
                   child: ListTile(
                     leading: IconButton(
@@ -296,9 +308,9 @@ Future<void> _getDirectionsTo(String destinationid, BuildContext context) async 
        // _placeListId = json.decode(response.body)['place_id'];
         print("PlaceList##################: $_directionPlaceList");
         print("**************************PlaceListID##################: $_directionPlaceList");
-          _ShowDirections(context);
+          
       });
-
+        _ShowDirections(context);
     } else {
       throw Exception('Failed to load predictions');
     }
