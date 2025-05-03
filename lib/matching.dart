@@ -113,10 +113,13 @@ class _MatchingState extends State<Matching> {
                 itemBuilder: (context, index) {
                   final user = filteredData[index].data();
                   return ListTile(
-                    title: Text(user['userName'] ?? 'No Name'), // <-- assuming your Profile has 'userName'
+                    title: Text(user['userName'] ?? 'No Name'), 
                     subtitle: Text(user['interests'] != null
                         ? (user['interests'] as List<dynamic>).join(', ')
                         : 'No Interests'),
+                    trailing: Text(user['bio'] != null
+                        ? ('Bio:  ${user['bio']}')
+                        : ''),
                   );
                 },
               );
