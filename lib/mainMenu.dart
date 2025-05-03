@@ -70,7 +70,8 @@ class _MainMenuState extends State<MainMenu>{
           }, child: Text("Sign out"))
         ],
       ),
-      body:  Column(
+      body:  Center(
+      child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             ElevatedButton(onPressed: (){
@@ -95,7 +96,7 @@ class _MainMenuState extends State<MainMenu>{
             }, child: Text("Planner")),
           ],
           
-        ),
+        )),
       
     );
   }
