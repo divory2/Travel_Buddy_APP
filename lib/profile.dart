@@ -194,11 +194,15 @@ class _ProfileState extends State<Profile> {
           if (index == 0) {
             Navigator.push(context, MaterialPageRoute(builder: (context) => MainMenu(user: widget.user)));
           }
+          if (index == 1) {
+            Navigator.push(context, MaterialPageRoute(builder: (context) => Profile(user: widget.user)));
+          }
         },
       ),
       body: LayoutBuilder(
         builder: (context, constraints) {
-          return Column(
+          return Center(
+           child: Column(
             children: [
               SizedBox(
                 width: 250,
@@ -229,7 +233,7 @@ class _ProfileState extends State<Profile> {
                 child: Text("Select Interests"),
               ),
             ],
-          );
+          ));
         },
       ),
     );

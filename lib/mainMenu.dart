@@ -75,7 +75,7 @@ class _MainMenuState extends State<MainMenu>{
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             ElevatedButton(onPressed: (){
-                  Navigator.push(context, MaterialPageRoute(builder: (context)=> Maps()));
+                  Navigator.push(context, MaterialPageRoute(builder: (context)=> Maps(user: widget.user,)));
             }, child: Text("Map")),
 
             ElevatedButton(onPressed: (){
@@ -89,10 +89,10 @@ class _MainMenuState extends State<MainMenu>{
             }, child: Text("Chat")),
             ElevatedButton(onPressed: (){
               FirebaseAuth auth = FirebaseAuth.instance;
-              Navigator.push(context, MaterialPageRoute(builder: (context)=> Matching(auth: auth)));
+              Navigator.push(context, MaterialPageRoute(builder: (context)=> Matching(auth: auth, user: widget.user)));
             }, child: Text("Buddy Matching")),
             ElevatedButton(onPressed: (){
-                Navigator.push(context, MaterialPageRoute(builder: (context)=> Planner()));
+                Navigator.push(context, MaterialPageRoute(builder: (context)=> Planner(user: widget.user,)));
             }, child: Text("Planner")),
           ],
           

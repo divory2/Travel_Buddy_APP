@@ -1,8 +1,11 @@
 import 'dart:convert';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:travel_buddy_app/mainMenu.dart';
+import 'package:travel_buddy_app/profile.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:uuid/uuid.dart';
 import 'package:http/http.dart' as http;
@@ -10,7 +13,8 @@ import '.env.dart' as placesApiKey;
 import '.env.dart';
 
 class Planner extends StatefulWidget{
-  const Planner({super.key,});
+  const Planner({super.key, required this.user});
+  final UserCredential user;
   @override
   _PlannerState  createState() => _PlannerState(); 
 
@@ -192,6 +196,26 @@ void _ShowDirections(BuildContext context){
       appBar: AppBar(
         title: Text("Planner"),
       
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        items: <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: const Icon(Icons.home),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: const Icon(Icons.settings),
+            label: 'Setting',
+          ),
+        ],
+        onTap: (index) {
+          if (index == 0) {
+            Navigator.push(context, MaterialPageRoute(builder: (context) => MainMenu(user: widget.user)));
+          }
+          if (index == 1) {
+            Navigator.push(context, MaterialPageRoute(builder: (context) => Profile(user: widget.user)));
+          }
+        },
       ),
       body: Center(
         child: Column(

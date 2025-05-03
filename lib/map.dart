@@ -1,9 +1,14 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:travel_buddy_app/directions_model.dart';
 import 'package:travel_buddy_app/directions_repository.dart';
+import 'package:travel_buddy_app/mainMenu.dart';
+import 'package:travel_buddy_app/profile.dart';
 
 class Maps extends StatefulWidget {
+  Maps({Key? key, required this.user}) : super(key: key);
+  final UserCredential user;
   @override
   _MapState createState() => _MapState();
 }
@@ -67,6 +72,26 @@ class _MapState extends State<Maps> {
               ),
             ),
         ],
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        items: <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: const Icon(Icons.home),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: const Icon(Icons.settings),
+            label: 'Setting',
+          ),
+        ],
+        onTap: (index) {
+          if (index == 0) {
+            Navigator.push(context, MaterialPageRoute(builder: (context) => MainMenu(user: widget.user)));
+          }
+           if (index == 1) {
+            Navigator.push(context, MaterialPageRoute(builder: (context) => Profile(user: widget.user)));
+          }
+        },
       ),
       body: Stack(
         alignment: Alignment.center,

@@ -72,7 +72,7 @@ class _ChatScreenState extends State<ChatScreen> {
             }else if(value == 1){
               Navigator.push(context, MaterialPageRoute(builder: (context)=> Profile(user: widget.user,)));
             }else if(value == 2){
-              Navigator.push(context, MaterialPageRoute(builder: (context)=> Matching(auth: _auth,)));
+              Navigator.push(context, MaterialPageRoute(builder: (context)=> Matching(auth: _auth,user: widget.user,)));
             }
         },
       ),

@@ -1,11 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:travel_buddy_app/mainMenu.dart';
+import 'package:travel_buddy_app/profile.dart';
 
 class Matching extends StatefulWidget {
-  Matching({Key? key, required this.auth}) : super(key: key);
+  Matching({Key? key, required this.auth, required this.user}) : super(key: key);
   final FirebaseAuth auth;
-
+  final UserCredential user;
   @override
   _MatchingState createState() => _MatchingState();
 }
@@ -20,6 +22,26 @@ class _MatchingState extends State<Matching> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Matching Buddy"),
+      ),
+       bottomNavigationBar: BottomNavigationBar(
+        items: <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: const Icon(Icons.home),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: const Icon(Icons.settings),
+            label: 'Setting',
+          ),
+        ],
+        onTap: (index) {
+          if (index == 0) {
+            Navigator.push(context, MaterialPageRoute(builder: (context) => MainMenu(user: widget.user)));
+          }
+           if (index == 1) {
+            Navigator.push(context, MaterialPageRoute(builder: (context) => Profile(user: widget.user)));
+          }
+        },
       ),
       body: FutureBuilder<DocumentSnapshot<Map<String, dynamic>>>(
         future: database.collection('Profile').doc(_auth.currentUser?.uid).get(),
