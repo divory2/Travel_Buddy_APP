@@ -32,13 +32,16 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   void _handleSendPressed(types.PartialText message) async {
-    await FirebaseFirestore.instance.collection('Profile').doc(_auth.currentUser?.uid).set({
-      'text': message.text,
-      'MessageCreatedAt': DateTime.now().millisecondsSinceEpoch,
-      'userId': _user.id,
-      
-    });
-  }
+  await FirebaseFirestore.instance
+      .collection('messages') // Use a top-level or nested collection
+      .add({
+    'text': message.text,
+    'MessageCreatedAt': DateTime.now().millisecondsSinceEpoch,
+    'userId': _user.id,
+    'userName': _user.firstName,
+  });
+}
+
 
   List<types.Message> _transformMessages(QuerySnapshot snapshot) {
     return snapshot.docs.map((doc) {
@@ -78,7 +81,7 @@ class _ChatScreenState extends State<ChatScreen> {
       ),
       body: StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance
-            .collection('Profile')
+            .collection('messages')
             .orderBy('MessageCreatedAt', descending: true)
             .snapshots(),
         builder: (context, snapshot) {
