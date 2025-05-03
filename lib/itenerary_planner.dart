@@ -97,34 +97,43 @@ void getSuggestion(String input) async {
 Future<void> _viewDestinations(BuildContext context) async {
   await showDialog(
     context: context,
-    builder: (_) => AlertDialog(
-      title: Text('Your Destinations'),
-      content: SizedBox(
-        width: double.maxFinite,
-        child: destinationList.isEmpty
-            ? Text('No destinations added yet.')
-            : SingleChildScrollView(
-                child: ListBody(
-                  children: destinationList.map((destination){
-                        return ListTile(
-                          title: Text(destination),
-                          trailing: IconButton(
-                                  onPressed: () => _getDirectionsTo(destination, context), 
-                                  icon: Icon(Icons.directions)
-                          ),
-                          
-                          
-                        );
-                      }).toList(),
+    builder: (_) => StatefulBuilder( // Needed to call setState inside the dialog
+      builder: (context, setState) => AlertDialog(
+        title: Text('Your Destinations'),
+        content: SizedBox(
+          width: double.maxFinite,
+          height: 300, // Added height for proper rendering
+          child: destinationList.isEmpty
+              ? Center(child: Text('No destinations added yet.'))
+              : ListView.builder(
+                  itemCount: destinationList.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    final destination = destinationList[index];
+                    return ListTile(
+                      leading: IconButton(
+                        icon: Icon(Icons.remove),
+                        onPressed: () {
+                          setState(() {
+                            destinationList.removeAt(index);
+                          });
+                        },
+                      ),
+                      title: Text(destination),
+                      trailing: IconButton(
+                        icon: Icon(Icons.directions),
+                        onPressed: () => _getDirectionsTo(destination, context),
+                      ),
+                    );
+                  },
                 ),
-              ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text('Close'),
+          )
+        ],
       ),
-      actions: [
-        TextButton(
-          onPressed: () => Navigator.pop(context),
-          child: Text('Close'),
-        )
-      ],
     ),
   );
 }
