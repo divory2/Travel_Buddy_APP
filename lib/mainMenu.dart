@@ -41,63 +41,95 @@ class _MainMenuState extends State<MainMenu>{
 
   }
   @override
-    build(BuildContext context) {
-     
+Widget build(BuildContext context) {
+  final userDocStream = _dataBase
+      .collection("Profile")
+      .doc(widget.user.user?.uid)
+      .snapshots(); // Real-time stream
 
-    
-      //UserCredential user = widget.user;
-   // Map<String, dynamic>? userinformation = {}; // _dataBase.collection("Profile").doc(widget.user.user?.uid).get();
-  // final userInformation = _dataBase.collection("Profile").doc(widget.user.user?.uid);
-  // final Future<DocumentSnapshot<Map<String, dynamic>>> docSnapshot = await userInformation.get();
-   
-    
+  return StreamBuilder<DocumentSnapshot>(
+    stream: userDocStream,
+    builder: (context, snapshot) {
+      if (!snapshot.hasData) {
+        return Scaffold(body: Center(child: CircularProgressIndicator()));
+      }
 
+      final data = snapshot.data!.data() as Map<String, dynamic>? ?? {};
 
-    // TODO: implement build
-    return Scaffold(
-      appBar: AppBar(
-        leading: Text("Profile: ${data['userName']}"),
-        title: Text("Travel Buddy APP"),
-        actions: <Widget>[
-          ElevatedButton(onPressed: ()async{
-               await FirebaseAuth.instance.signOut();
+      return Scaffold(
+        appBar: AppBar(
+          leading: Text("Profile: ${data['userName'] ?? 'Loading...'}"),
+          title: Text("Travel Buddy APP"),
+          actions: [
+            ElevatedButton(
+              onPressed: () async {
+                await FirebaseAuth.instance.signOut();
                 Navigator.of(context).pushAndRemoveUntil(
-      MaterialPageRoute(
-        builder: (context) => SignIn(auth: FirebaseAuth.instance),
-      ),
-      (route) => false,
-    );
-          }, child: Text("Sign out"))
-        ],
-      ),
-      body:  Center(
-      child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            ElevatedButton(onPressed: (){
-                  Navigator.push(context, MaterialPageRoute(builder: (context)=> Maps(user: widget.user,)));
-            }, child: Text("Map")),
-
-            ElevatedButton(onPressed: (){
-              Navigator.push(context, MaterialPageRoute(builder: (context)=> Profile(user: widget.user)));
-
-            }, child: Text("Profile")),
-
-            ElevatedButton(onPressed: (){
-              Navigator.push(context, MaterialPageRoute(builder: (context)=> ChatScreen(user: widget.user,)));
-
-            }, child: Text("Chat")),
-            ElevatedButton(onPressed: (){
-              FirebaseAuth auth = FirebaseAuth.instance;
-              Navigator.push(context, MaterialPageRoute(builder: (context)=> Matching(auth: auth, user: widget.user)));
-            }, child: Text("Buddy Matching")),
-            ElevatedButton(onPressed: (){
-                Navigator.push(context, MaterialPageRoute(builder: (context)=> Planner(user: widget.user,)));
-            }, child: Text("Planner")),
+                  MaterialPageRoute(
+                      builder: (context) =>
+                          SignIn(auth: FirebaseAuth.instance)),
+                  (route) => false,
+                );
+              },
+              child: Text("Sign out"),
+            )
           ],
-          
-        )),
-      
-    );
-  }
+        ),
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => Maps(user: widget.user)));
+                  },
+                  child: Text("Map")),
+              ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                Profile(user: widget.user)));
+                  },
+                  child: Text("Profile")),
+              ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                ChatScreen(user: widget.user)));
+                  },
+                  child: Text("Chat")),
+              ElevatedButton(
+                  onPressed: () {
+                    FirebaseAuth auth = FirebaseAuth.instance;
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                Matching(auth: auth, user: widget.user)));
+                  },
+                  child: Text("Buddy Matching")),
+              ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                Planner(user: widget.user)));
+                  },
+                  child: Text("Planner")),
+            ],
+          ),
+        ),
+      );
+    },
+  );
+}
+
 }
